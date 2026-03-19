@@ -72,10 +72,13 @@ jobs:
             eval "$BASE_MAVEN_CMD -Dtest=${{ inputs.test_scope }}"
           fi
 
-      - name: Upload Surefire Test Reports
+      - name: Upload All Test Reports
         if: always() 
         uses: actions/upload-artifact@v4
         with:
-          name: surefire-test-report-${{ github.run_number }}
-          path: target/surefire-reports/
+          name: all-test-reports-${{ github.run_number }}
+          path: |
+            target/surefire-reports/
+            target/Extent-Reports/
+            target/Custom-Reports/
           retention-days: 14

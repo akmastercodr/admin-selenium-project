@@ -32,9 +32,8 @@ public class CustomHtmlReporter {
     }
 
     public static void initializeReport() {
-        String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         new File(System.getProperty("user.dir") + "/target/Custom-Reports/").mkdirs();
-        reportPath = System.getProperty("user.dir") + "/target/Custom-Reports/DAMS_Custom_Report_" + timestamp + ".html";
+        reportPath = System.getProperty("user.dir") + "/target/Custom-Reports/index.html";
         steps.clear();
     }
 
