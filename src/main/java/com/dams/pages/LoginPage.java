@@ -10,14 +10,19 @@ public class LoginPage {
     private WebDriver driver;
     private WebDriverWait wait;
 
-    // Robust XPaths that usually work for typical React/MUI forms
-    private By emailInput = By.xpath("//input[@type='email' or contains(@name, 'email') or contains(@placeholder, 'Email')]");
-    private By passwordInput = By.xpath("//input[@type='password' or contains(@name, 'password') or contains(@placeholder, 'Password')]");
-    private By submitBtn = By.xpath("//button[@type='submit' or contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'login')]");
+    // Exact Locators Automatically Extracted via Browser Agent
+    private By emailInput = By.cssSelector("#email");
+    private By passwordInput = By.cssSelector("#password");
+    private By submitBtn = By.xpath("//button[contains(@class, 'ant-btn-primary') and contains(., 'Login')]");
     
-    // Assuming OTP uses a standard input or placeholder
-    private By otpInput = By.xpath("//input[contains(@name, 'otp') or contains(@placeholder, 'OTP') or @type='number']");
-    private By verifyOtpBtn = By.xpath("//button[@type='submit' or contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'verify') or contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'submit')]");
+    // OTP fields (it uses 4 separate input fields)
+    private By otpChar1 = By.xpath("//input[@aria-label='Please enter OTP character 1']");
+    private By otpChar2 = By.xpath("//input[@aria-label='Please enter OTP character 2']");
+    private By otpChar3 = By.xpath("//input[@aria-label='Please enter OTP character 3']");
+    private By otpChar4 = By.xpath("//input[@aria-label='Please enter OTP character 4']");
+    
+    // Final verify button after entering OTP
+    private By verifyOtpBtn = By.xpath("//button[contains(@class, 'ant-btn-primary') and contains(., 'Submit')]");
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
@@ -25,32 +30,26 @@ public class LoginPage {
     }
 
     public void login(String email, String password, String otp) {
-        // Enter Email
+        // Step 1: Enter Email
         wait.until(ExpectedConditions.visibilityOfElementLocated(emailInput)).sendKeys(email);
         
-        // Enter Password
+        // Step 2: Enter Password
         driver.findElement(passwordInput).sendKeys(password);
         
-        // Click Login to trigger OTP
+        // Step 3: Click Login
         driver.findElement(submitBtn).click();
+        System.out.println("Login button clicked, waiting for OTP screen...");
         
-        System.out.println("Login button clicked, waiting for OTP fields...");
-        
-        try {
-            // Wait for OTP field and enter OTP
-            wait.until(ExpectedConditions.visibilityOfElementLocated(otpInput)).sendKeys(otp);
-            System.out.println("OTP entered successfully.");
+        // Step 4: Enter OTP
+        // Note: The React component supports pasting the full OTP string into the first box
+        if (otp != null && otp.length() >= 4) {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(otpChar1)).sendKeys(otp);
+            System.out.println("OTP elements filled successfully.");
             
-            // Click Verify OTP if a distinct button appears
-            try {
-                driver.findElement(verifyOtpBtn).click();
-            } catch(Exception e) {
-                // Sometime the form just submits or the login button acts as verify
-                driver.findElement(submitBtn).click();
-            }
-        } catch(Exception e) {
-            System.out.println("WARNING: OTP locator strategy might need adjustment based on the actual DOM.");
-            throw e;
+            // Step 5: Click Submit/Verify OTP
+            driver.findElement(verifyOtpBtn).click();
+        } else {
+            System.out.println("Invalid OTP standard provided.");
         }
     }
 }
