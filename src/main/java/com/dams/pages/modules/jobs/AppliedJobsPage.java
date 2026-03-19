@@ -17,7 +17,7 @@ public class AppliedJobsPage {
     private By appliedJobCard = By.xpath("//div[contains(text(), 'Applied Job')]");
     
     // Locators for Verification on the Applied Jobs page
-    private By userNameColumn = By.xpath("//th[contains(text(), 'User Name')]");
+    private By userNameColumn = By.xpath("//th[contains(., 'User Name')]");
 
     public AppliedJobsPage(WebDriver driver) {
         this.driver = driver;

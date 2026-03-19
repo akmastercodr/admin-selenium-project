@@ -17,7 +17,7 @@ public class JobPostPage {
     private By jobPostCard = By.xpath("//div[contains(text(), 'Job Post')]");
     
     // Locators for Verification on the Job Post page
-    private By postAJobButton = By.xpath("//span[contains(text(), 'Post A Job')]/parent::button");
+    private By addJobButton = By.xpath("//button[.//span[text()='Add Job']]");
 
     public JobPostPage(WebDriver driver) {
         this.driver = driver;
@@ -36,12 +36,12 @@ public class JobPostPage {
 
     public boolean verifyJobPostPageLoaded() {
         try {
-            // Step 3: Verify the 'Post A Job' action button is visible
-            wait.until(ExpectedConditions.visibilityOfElementLocated(postAJobButton));
-            CustomHtmlReporter.logStep("POST_3", "Job Post", "STEP 3 - Verify 'Post A Job' Button Loads", "PASS", "-");
+            // Step 3: Verify the 'Add Job' action button is visible
+            wait.until(ExpectedConditions.visibilityOfElementLocated(addJobButton));
+            CustomHtmlReporter.logStep("POST_3", "Job Post", "STEP 3 - Verify 'Add Job' Button Loads", "PASS", "-");
             return true;
         } catch (Exception e) {
-            CustomHtmlReporter.logStep("POST_3", "Job Post", "STEP 3 - Verify 'Post A Job' Button Loads", "FAIL", "-");
+            CustomHtmlReporter.logStep("POST_3", "Job Post", "STEP 3 - Verify 'Add Job' Button Loads", "FAIL", "-");
             return false;
         }
     }
