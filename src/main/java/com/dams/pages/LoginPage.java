@@ -30,26 +30,28 @@ public class LoginPage {
     }
 
     public void login(String email, String password, String otp) {
-        // Step 1: Enter Email
+        // Step 1: Open Link (Assumed logged in BaseTest, but keeping tracking sequential)
+        
+        // Step 2: Enter Email
         wait.until(ExpectedConditions.visibilityOfElementLocated(emailInput)).sendKeys(email);
+        com.dams.report.CustomHtmlReporter.logStep("TC_1", "Login", "STEP 2 - Enter Email", "PASS", "-");
         
         // Step 2: Enter Password
         driver.findElement(passwordInput).sendKeys(password);
+        com.dams.report.CustomHtmlReporter.logStep("TC_2", "Login", "STEP 2 - Enter Password", "PASS", "-");
         
         // Step 3: Click Login
         driver.findElement(submitBtn).click();
-        System.out.println("Login button clicked, waiting for OTP screen...");
+        com.dams.report.CustomHtmlReporter.logStep("TC_3", "Login", "STEP 3 - Click Login Button", "PASS", "-");
         
         // Step 4: Enter OTP
-        // Note: The React component supports pasting the full OTP string into the first box
         if (otp != null && otp.length() >= 4) {
             wait.until(ExpectedConditions.visibilityOfElementLocated(otpChar1)).sendKeys(otp);
-            System.out.println("OTP elements filled successfully.");
+            com.dams.report.CustomHtmlReporter.logStep("TC_4", "Login", "STEP 4 - Enter OTP", "PASS", "-");
             
             // Step 5: Click Submit/Verify OTP
             driver.findElement(verifyOtpBtn).click();
-        } else {
-            System.out.println("Invalid OTP standard provided.");
+            com.dams.report.CustomHtmlReporter.logStep("TC_5", "Login", "STEP 5 - Click OTP Submit", "PASS", "-");
         }
     }
 }
