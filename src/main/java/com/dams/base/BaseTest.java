@@ -3,8 +3,8 @@ package com.dams.base;
 import com.dams.driver.DriverFactory;
 import com.dams.pages.LoginPage;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 
 @Listeners(com.dams.report.ExtentListener.class)
@@ -17,13 +17,13 @@ public class BaseTest {
         com.dams.report.CustomHtmlReporter.initializeReport();
     }
 
-    @BeforeMethod
+    @BeforeClass
     public void setUp() {
         // Initialize the browser
         driver = DriverFactory.initDriver();
         System.out.println("Navigating to https://devadmin.damsdelhi.com/");
         driver.get("https://devadmin.damsdelhi.com/");
-        com.dams.report.CustomHtmlReporter.logStep("TC_0", "Init", "STEP 1 - Open Dashboard", "PASS", "-");
+        com.dams.report.CustomHtmlReporter.logStep("Login Phase", "TC_0", "Init", "STEP 1 - Open Dashboard", "PASS", "-");
         
         // Initialize the Page Objects
         loginPage = new LoginPage(driver);
@@ -40,7 +40,7 @@ public class BaseTest {
         }
     }
 
-    @AfterMethod
+    @AfterClass
     public void tearDown() {
         DriverFactory.quitDriver();
     }

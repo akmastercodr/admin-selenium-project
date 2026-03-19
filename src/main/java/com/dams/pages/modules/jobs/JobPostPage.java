@@ -27,21 +27,21 @@ public class JobPostPage {
     public void navigateToJobPost() {
         // Step 1: Click the 'Jobs' module in the sidebar (or navigate back to /jobs card overview)
         wait.until(ExpectedConditions.elementToBeClickable(jobsSidebarMenu)).click();
-        CustomHtmlReporter.logStep("POST_1", "Job Post", "STEP 1 - Navigate Back to 'Jobs' Module View", "PASS", "-");
+        CustomHtmlReporter.logStep("Job Post Module", "POST_1", "Job Post", "STEP 1 - Navigate Back to 'Jobs' Module View", "PASS", "-");
         
         // Step 2: Click the 'Job Post' card
         wait.until(ExpectedConditions.elementToBeClickable(jobPostCard)).click();
-        CustomHtmlReporter.logStep("POST_2", "Job Post", "STEP 2 - Click 'Job Post' Card", "PASS", "-");
+        CustomHtmlReporter.logStep("Job Post Module", "POST_2", "Job Post", "STEP 2 - Click 'Job Post' Card", "PASS", "-");
     }
 
     public boolean verifyJobPostPageLoaded() {
         try {
             // Step 3: Verify the 'Add Job' action button is visible
             wait.until(ExpectedConditions.visibilityOfElementLocated(addJobButton));
-            CustomHtmlReporter.logStep("POST_3", "Job Post", "STEP 3 - Verify 'Add Job' Button Loads", "PASS", "-");
+            CustomHtmlReporter.logStep("Job Post Module", "POST_3", "Job Post", "STEP 3 - Verify 'Add Job' Button Loads", "PASS", "-");
             return true;
         } catch (Exception e) {
-            CustomHtmlReporter.logStep("POST_3", "Job Post", "STEP 3 - Verify 'Add Job' Button Loads", "FAIL", "-");
+            CustomHtmlReporter.logStep("Job Post Module", "POST_3", "Job Post", "STEP 3 - Verify 'Add Job' Button Loads", "FAIL", "-");
             return false;
         }
     }

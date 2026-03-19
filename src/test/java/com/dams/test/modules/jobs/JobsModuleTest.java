@@ -24,7 +24,7 @@ public class JobsModuleTest extends BaseTest {
         Assert.assertTrue(isLoaded, "Applied Jobs page failed to load correctly!");
         
         // Log final test state to report
-        CustomHtmlReporter.logStep("EXEC_1", "Execution", "jobsModuleTest -> AppliedJobs", "PASS", "-");
+        CustomHtmlReporter.logStep("Applied Jobs Module", "EXEC_1", "Execution", "jobsModuleTest -> AppliedJobs", "PASS", "-");
     }
 
     @Test(priority = 2)
@@ -40,6 +40,6 @@ public class JobsModuleTest extends BaseTest {
         Assert.assertTrue(isLoaded, "Job Post page failed to load correctly!");
         
         // Log final test state to report
-        CustomHtmlReporter.logStep("EXEC_2", "Execution", "jobsModuleTest -> JobPost", "PASS", "-");
+        CustomHtmlReporter.logStep("Job Post Module", "EXEC_2", "Execution", "jobsModuleTest -> JobPost", "PASS", "-");
     }
 }

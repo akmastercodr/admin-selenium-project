@@ -5,12 +5,14 @@ import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CustomHtmlReporter {
 
     private static String reportPath;
-    private static List<TestStep> steps = new ArrayList<>();
+    private static Map<String, List<TestStep>> tableGroups = new LinkedHashMap<>();
     private static int totalTests = 1;
     private static int passCount = 1;
     private static int failCount = 0;
@@ -34,11 +36,12 @@ public class CustomHtmlReporter {
     public static void initializeReport() {
         new File(System.getProperty("user.dir") + "/target/Custom-Reports/").mkdirs();
         reportPath = System.getProperty("user.dir") + "/target/Custom-Reports/index.html";
-        steps.clear();
+        tableGroups.clear();
     }
 
-    public static void logStep(String tc, String phase, String stepDesc, String status, String screenshotLink) {
-        steps.add(new TestStep(tc, phase, stepDesc, status, screenshotLink));
+    public static void logStep(String tableName, String tc, String phase, String stepDesc, String status, String screenshotLink) {
+        tableGroups.putIfAbsent(tableName, new ArrayList<>());
+        tableGroups.get(tableName).add(new TestStep(tc, phase, stepDesc, status, screenshotLink));
         if (status.equalsIgnoreCase("FAIL")) {
             failCount++;
             passCount = Math.max(0, passCount - 1);
@@ -70,7 +73,9 @@ public class CustomHtmlReporter {
         html.append("<div class='sidebar'>");
         html.append("<h2 style='color: #3b5bdb; margin: 30px 20px 10px 20px; font-size: 16px;'>DAMS</h2>");
         html.append("<p style='color: #999; font-size: 10px; margin-left: 20px; letter-spacing: 1px;'>MODULES</p>");
-        html.append("<p style='font-size: 12px; color: #555; margin-left: 20px;'><span style='color:#2ecc71;'>&bull;</span> adminLoginTest</p>");
+        for (String tableName : tableGroups.keySet()) {
+            html.append("<p style='font-size: 12px; color: #555; margin-left: 20px;'><span style='color:#2ecc71;'>&bull;</span> ").append(tableName).append("</p>");
+        }
         html.append("</div>");
         
         // Main Header
@@ -87,27 +92,34 @@ public class CustomHtmlReporter {
         html.append("<div class='card'><div class='card-title'>FAILED</div><div class='card-value red'>").append(failCount).append("</div></div>");
         html.append("</div>");
         
-        html.append("<div style='background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);'>");
-        html.append("<h3 style='margin-top: 0; font-size: 15px; color: #333;'>adminLoginTest <span class='status-badge pass-badge' style='margin-left: 10px;'>PASS</span></h3>");
-        
-        // Data Table
-        html.append("<table><tr><th>TC</th><th>PHASE</th><th>STEP</th><th>STATUS</th><th>SCREENSHOT</th></tr>");
-        
-        for (TestStep step : steps) {
-            String badge = step.status.equalsIgnoreCase("PASS") ? "pass-badge" : "fail-badge";
-            String screenshotHtml = step.screenshotPath.equals("-") ? "-" : "<a href='" + step.screenshotPath + "' target='_blank' class='view-btn'>View</a>";
+        // Generate separate tables for each group
+        for (String tableName : tableGroups.keySet()) {
+            boolean hasFail = tableGroups.get(tableName).stream().anyMatch(step -> step.status.equalsIgnoreCase("FAIL"));
+            String badge = hasFail ? "<span class='status-badge fail-badge' style='margin-left: 10px;'>FAIL</span>" 
+                                   : "<span class='status-badge pass-badge' style='margin-left: 10px;'>PASS</span>";
+                                   
+            html.append("<div style='background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); margin-bottom: 25px;'>");
+            html.append("<h3 style='margin-top: 0; font-size: 15px; color: #333;'>").append(tableName).append(badge).append("</h3>");
             
-            html.append("<tr>");
-            html.append("<td>").append(step.tc).append("</td>");
-            html.append("<td>").append(step.phase).append("</td>");
-            html.append("<td>").append(step.stepDesc).append("</td>");
-            html.append("<td><span class='status-badge ").append(badge).append("'>").append(step.status).append("</span></td>");
-            html.append("<td>").append(screenshotHtml).append("</td>");
-            html.append("</tr>");
+            // Data Table
+            html.append("<table><tr><th>TC</th><th>PHASE</th><th>STEP</th><th>STATUS</th><th>SCREENSHOT</th></tr>");
+            
+            for (TestStep step : tableGroups.get(tableName)) {
+                String rowBadge = step.status.equalsIgnoreCase("PASS") ? "pass-badge" : "fail-badge";
+                String screenshotHtml = step.screenshotPath.equals("-") ? "-" : "<a href='" + step.screenshotPath + "' target='_blank' class='view-btn'>View</a>";
+                
+                html.append("<tr>");
+                html.append("<td>").append(step.tc).append("</td>");
+                html.append("<td>").append(step.phase).append("</td>");
+                html.append("<td>").append(step.stepDesc).append("</td>");
+                html.append("<td><span class='status-badge ").append(rowBadge).append("'>").append(step.status).append("</span></td>");
+                html.append("<td>").append(screenshotHtml).append("</td>");
+                html.append("</tr>");
+            }
+            html.append("</table>");
+            html.append("</div>");
         }
         
-        html.append("</table>");
-        html.append("</div>"); // end white wrapper
         html.append("<p style='text-align: center; margin-top: 50px; color: #aaa; font-size: 11px;'>Created by Ashutosh Mago - Junior AWS DevOps Engineer</p>");
         html.append("</div></body></html>");
 
