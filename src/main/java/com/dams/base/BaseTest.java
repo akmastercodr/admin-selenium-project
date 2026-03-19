@@ -31,9 +31,10 @@ public class BaseTest {
         // Execute the login flow (happens before every test inheriting BaseTest)
         loginPage.login("07siddwivedi@gmail.com", "Siddarth@123", "1980");
         
-        // Pause to allow dashboard routing and rendering to complete
+        // Pause for 1 minute (60,000 milliseconds) as requested to allow heavy dashboard elements to become visible
+        System.out.println("Login completed. Waiting 1 minute for dashboard to fully render...");
         try {
-            Thread.sleep(3000);
+            Thread.sleep(60000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
