@@ -62,10 +62,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <suiteXmlFiles>
-                        <!-- Fallback parameter: you can inject this via CI pipeline -->
-                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
-                    </suiteXmlFiles>
                     <!-- Setting system properties (optional, allows passing -Dbrowser options) -->
                     <systemPropertyVariables>
                         <browser>${browser}</browser>
