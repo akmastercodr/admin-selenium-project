@@ -13,7 +13,7 @@ public class DriverFactory {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
-        // options.addArguments("--headless"); // Uncomment to run headless in CI
+        options.addArguments("--headless"); // Runs invisibly in CI
         options.addArguments("--window-size=1920,1080");
         
         WebDriver webDriver = new ChromeDriver(options);
